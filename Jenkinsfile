@@ -3,7 +3,7 @@ import hudson.model.*
 
 
 try {
-    node('node') {
+    node {
         state('Build') {
             checkout scm
             sh 'npm install'
