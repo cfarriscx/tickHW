@@ -4,7 +4,7 @@ import hudson.model.*
 
 try {
     node {
-        state('Build') {
+        stage('Build') {
             checkout scm
             sh 'npm install'
             sh 'npm test'
