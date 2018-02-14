@@ -1,6 +1,8 @@
 #!groovy
 import hudson.model.*
 
+// define branch before node so it is a global variable available in all stages.
+def branch = ''
 
 try {
     node {
@@ -11,7 +13,7 @@ try {
             // From the temp file place into variable
             def fromgithook = readJSON file: 'tempGitFile.json'
             // find branch name and set to lower case for environment variables
-            def branch = fromgithook.ref
+            branch = fromgithook.ref
             def branchFull = branch
             def lowercaseBranch = branch.toLowerCase();
             def user = fromgithook.pusher.name
@@ -44,6 +46,8 @@ try {
             } else {
                 // old branch with existing DC so launch build and deploy
                 openshiftBuild apiURL: '', authToken: '', bldCfg: """$user-$branch""", buildName: '', checkForTriggeredDeployments: 'true', commitID: '', namespace: '', showBuildLogs: 'true', verbose: 'false', waitTime: '', waitUnit: 'sec'
+                openshiftDeploy depCfg: 'simple-nodejs-qa', verbose: 'false'
+                openshiftVerifyDeployment depCfg: 'simple-nodejs-qa', verbose: 'false'
             }
 
         }
@@ -53,9 +57,9 @@ try {
             }
         }
         stage('Clean and Delete') {
-            """oc delete all -l BRANCH=$lowercaseBranch"""
-            """oc delete pvc -l BRANCH=$lowercaseBranch"""
-            """oc delete secret -l BRANCH=$lowercaseBranch"""
+            """oc delete all -l BRANCH=$branch"""
+            """oc delete pvc -l BRANCH=$branch"""
+            """oc delete secret -l BRANCH=$branch"""
         }
     }
 } catch (err) {
