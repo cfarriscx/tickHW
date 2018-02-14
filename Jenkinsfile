@@ -23,7 +23,7 @@ try {
             // Check for new branch and existing openshift buildconfig
             
             sh """oc get dc -l $user-$branch &> tempGetDC"""
-            //def existingDeploymentConfig = readFile('tempGetDC').trim()
+            def existingDeploymentConfig = readFile('tempGetDC').trim()
             println existingDeploymentConfig
             // Check git message for deleted branch. If deleted then clean resources
             if(false) {
