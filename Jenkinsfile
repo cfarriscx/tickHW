@@ -1,9 +1,6 @@
 #!groovy
 import hudson.model.*
 
-#!groovy
-import hudson.model.*
-
 
 try {
     node {
