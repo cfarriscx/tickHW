@@ -19,14 +19,14 @@ try {
             sh 'oc project twitter-cicd'
             // Check for new branch and existing openshift buildconfig
             sh """oc get dc -l $branch >> tempGetDC.txt"""
-            def existingDeploymentConfig = read file: 'tempGetDC.txt'
+            def existingDeploymentConfig = readFile 'tempGetDC.txt'
             println existingDeploymentConfig
 
             // Check git message for deleted branch. If deleted then clean resources
             if(false) {
                 // delete all with label
                 """oc delete all -l BRANCH=$branch"""
-            } else if(false) {
+            } else if(existingDeploymentConfig == "No resources found.") {
                 // new branch so generate DC from template
                 println fromgithook.ref
                 println fromgithook.pusher.name
