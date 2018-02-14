@@ -20,6 +20,7 @@ try {
             // Check for new branch and existing openshift buildconfig
             sh """oc get dc -l $branch >> tempGetDC.txt"""
             def existingDeploymentConfig = readFile file: 'tempGetDC.txt'
+            sh 'cat tempGetDC.txt'
             println existingDeploymentConfig
 
             println "here"
