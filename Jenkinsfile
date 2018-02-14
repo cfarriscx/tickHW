@@ -47,8 +47,8 @@ try {
             } else {
                 // old branch with existing DC so launch build and deploy
                 openshiftBuild apiURL: '', authToken: '', bldCfg: """$user-$branch""", buildName: '', checkForTriggeredDeployments: 'true', commitID: '', namespace: '', showBuildLogs: 'true', verbose: 'false', waitTime: '', waitUnit: 'sec'
-                openshiftDeploy depCfg: 'simple-nodejs-qa', verbose: 'false'
-                openshiftVerifyDeployment depCfg: 'simple-nodejs-qa', verbose: 'false'
+                openshiftDeploy depCfg: """$user-$branch""", verbose: 'false'
+                openshiftVerifyDeployment depCfg: """$user-$branch""", verbose: 'false'
             }
 
         }
