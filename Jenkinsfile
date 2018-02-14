@@ -28,10 +28,10 @@ try {
             if(false) {
                 // delete all with label
                 """oc delete all -l BRANCH=$lowercaseBranch"""
+                """oc delete pvc -l BRANCH=$lowercaseBranch"""
+                """oc delete secret -l BRANCH=$lowercaseBranch"""
             } else if(existingDeploymentConfig == "No resources found.") {
                 // new branch so generate DC from template
-                println branch
-                println branchFull
                 def user = fromgithook.pusher.name
                 sh """oc process nodejs-mongo-jenkinspipe \
                 -p NAME=$user-$branch \
@@ -54,6 +54,8 @@ try {
         }
         stage('Clean and Delete') {
             """oc delete all -l BRANCH=$lowercaseBranch"""
+            """oc delete pvc -l BRANCH=$lowercaseBranch"""
+            """oc delete secret -l BRANCH=$lowercaseBranch"""
         }
     }
 } catch (err) {
