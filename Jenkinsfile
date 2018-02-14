@@ -12,7 +12,7 @@ try {
             def fromgithook = readJSON file: 'tempGitFile.json'
             // find branch name and set to lower case for environment variables
             def branch = fromgithook.ref
-            def branchFull = branch
+            def branchFull = String.copy(branch)
             def lowercaseBranch = branch.toLowerCase();
             branch = branch.substring(branch.lastIndexOf("/") + 1)
             branch = branch.toLowerCase()
