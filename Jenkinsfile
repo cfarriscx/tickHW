@@ -1,6 +1,69 @@
 #!groovy
 import hudson.model.*
 
+#!groovy
+import hudson.model.*
+
+
+try {
+    node {
+        stage('checkout-and-test') {
+            
+            // Read payload which is a submitted JSON request from github and write to temp file
+            sh 'echo "$payload" >> tempGitFile.json'
+            // From the temp file place into variable
+            def fromgithook = readJSON file: 'tempGitFile.json'
+            // find branch name and set to lower case for environment variables
+            def branch = fromgithook.ref
+            branch = branch.substring(branch.lastIndexOf("/") + 1)
+            branch = branch.toLowerCase()
+            
+
+            sh 'oc project twitter-cicd'
+            // Check for new branch and existing openshift buildconfig
+            sh """oc get dc -l $branch >> tempGetDC.txt"""
+            def existingDeploymentConfig = read file: 'tempGetDC.txt'
+            println existingDeploymentConfig
+
+            // Check git message for deleted branch. If deleted then clean resources
+            if(false) {
+                // delete all with label
+                """oc delete all -l BRANCH=$branch"""
+            } else if(false) {
+                // new branch so generate DC from template
+                println fromgithook.ref
+                println fromgithook.pusher.name
+                def user = fromgithook.pusher.name
+                sh """oc process nodejs-mongo-jenkinspipe \
+                -p NAME=$user-$branch \
+                -p SOURCE_REPOSITORY_URL=https://github.com/cfarriscx/tickHW.git \
+                -p SOURCE_REPOSITORY_REF=$branch \
+                -p DATABASE_NAME=$branch \
+                -p DATABASE_SERVICE_NAME=$branch-mongodb \
+                -l BRANCH=$branch \
+                | oc create -f -"""
+            } else {
+                // old branch with existing DC so launch build and deploy
+                openshiftBuild apiURL: '', authToken: '', bldCfg: """$user-$branch""", buildName: '', checkForTriggeredDeployments: 'true', commitID: '', namespace: '', showBuildLogs: 'true', verbose: 'false', waitTime: '', waitUnit: 'sec'
+            }
+
+        }
+        stage('Approve Clean and Delete') {
+            timeout(time: 2, unit: 'DAYS') {
+                input message: 'Delete app based on branch'
+            }
+        }
+        stage('Clean and Delete') {
+            """oc delete all -l BRANCH=$branch"""
+        }
+    }
+} catch (err) {
+    echo "in catch block"
+    echo "Caught: ${err}"
+    currentBuild.result = 'FAILURE'
+    throw err
+}
+/*
 
 try {
     node {
@@ -47,3 +110,5 @@ try {
     currentBuild.result = 'FAILURE'
     throw err
 }
+
+*/
