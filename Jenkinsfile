@@ -31,9 +31,9 @@ try {
             // Check git message for deleted branch. If deleted then clean resources
             if(false) {
                 // delete all with label
-                """oc delete all -l BRANCH=$lowercaseBranch"""
-                """oc delete pvc -l BRANCH=$lowercaseBranch"""
-                """oc delete secret -l BRANCH=$lowercaseBranch"""
+                """oc delete all -l BRANCH=$branch"""
+                """oc delete pvc -l BRANCH=$branch"""
+                """oc delete secret -l BRANCH=$branch"""
             } else if(existingDeploymentConfig == "No resources found.") {
                 // new branch so generate DC from template
                 sh """oc process nodejs-mongo-jenkinspipe \
