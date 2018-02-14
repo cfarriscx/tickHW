@@ -19,9 +19,10 @@ try {
             sh 'oc project twitter-cicd'
             // Check for new branch and existing openshift buildconfig
             sh """oc get dc -l $branch >> tempGetDC.txt"""
-            def existingDeploymentConfig = readFile 'tempGetDC.txt'
+            def existingDeploymentConfig = readFile file: 'tempGetDC.txt'
             println existingDeploymentConfig
 
+            println "here"
             // Check git message for deleted branch. If deleted then clean resources
             if(false) {
                 // delete all with label
