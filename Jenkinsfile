@@ -22,7 +22,7 @@ try {
             sh 'oc project twitter-cicd'
             // Check for new branch and existing openshift buildconfig
             
-            sh """oc get dc $user-$branch &> tempGetDC"""
+            sh """oc get dc -l BRANCH=$lowercaseBranch &> tempGetDC"""
             def existingDeploymentConfig = readFile('tempGetDC').trim()
             println existingDeploymentConfig
             // Check git message for deleted branch. If deleted then clean resources
