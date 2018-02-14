@@ -52,15 +52,17 @@ try {
             }
 
         }
+
         stage('Approve Clean and Delete') {
             timeout(time: 2, unit: 'DAYS') {
                 input message: 'Delete app based on branch'
             }
         }
+
         stage('Clean and Delete') {
-            """oc delete all -l BRANCH=$branch"""
-            """oc delete pvc -l BRANCH=$branch"""
-            """oc delete secret -l BRANCH=$branch"""
+            sh """oc delete all -l BRANCH=$branch"""
+            sh """oc delete pvc -l BRANCH=$branch"""
+            sh """oc delete secret -l BRANCH=$branch"""
         }
     }
 } catch (err) {
