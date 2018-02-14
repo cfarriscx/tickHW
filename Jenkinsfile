@@ -30,8 +30,8 @@ try {
                 """oc delete all -l BRANCH=$lowercaseBranch"""
             } else if(existingDeploymentConfig == "No resources found.") {
                 // new branch so generate DC from template
-                println fromgithook.ref
-                println fromgithook.pusher.name
+                println branch
+                println branchFull
                 def user = fromgithook.pusher.name
                 sh """oc process nodejs-mongo-jenkinspipe \
                 -p NAME=$user-$branch \
