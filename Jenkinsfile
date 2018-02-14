@@ -18,8 +18,8 @@ try {
 
             sh 'oc project twitter-cicd'
             // Check for new branch and existing openshift buildconfig
-            sh """oc get dc -l $branch > tempGetDC.txt"""
-            def existingDeploymentConfig = readFile file: 'tempGetDC.txt'
+            sh """oc get dc -l $branch > tempGetDC"""
+            def existingDeploymentConfig = readFile('tempGetDC').trim()
             sh 'cat tempGetDC.txt'
             println existingDeploymentConfig
 
