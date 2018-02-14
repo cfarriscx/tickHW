@@ -15,6 +15,8 @@ try {
             def fromgithook = readJSON file: 'tempGitFile.json'
             // find branch name and set to lower case for environment variables
             branch = fromgithook.ref
+            def isDeleted = fromgithook.deleted
+            println isDeleted
             def branchFull = branch
             def lowercaseBranch = branch.toLowerCase();
             def user = fromgithook.pusher.name
@@ -29,7 +31,7 @@ try {
             def existingDeploymentConfig = readFile('tempGetDC').trim()
             println existingDeploymentConfig
             // Check git message for deleted branch. If deleted then clean resources
-            if(false) {
+            if(isDeleted) {
                 // delete all with label
                 """oc delete all -l BRANCH=$branch"""
                 """oc delete pvc -l BRANCH=$branch"""
