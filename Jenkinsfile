@@ -12,6 +12,8 @@ try {
             def fromgithook = readJSON file: 'tempGitFile.json'
             // find branch name and set to lower case for environment variables
             def branch = fromgithook.ref
+            def branchFull = String.copy(branch)
+            def lowercaseBranch = branch.toLowerCase();
             branch = branch.substring(branch.lastIndexOf("/") + 1)
             branch = branch.toLowerCase()
             
@@ -21,23 +23,20 @@ try {
             
             sh """oc get dc -l $branch &> tempGetDC"""
             def existingDeploymentConfig = readFile('tempGetDC').trim()
-            sh 'cat tempGetDC.txt'
-            println existingDeploymentConfig
 
-            println "here"
             // Check git message for deleted branch. If deleted then clean resources
             if(false) {
                 // delete all with label
-                """oc delete all -l BRANCH=$branch"""
+                """oc delete all -l BRANCH=$lowercaseBranch"""
             } else if(existingDeploymentConfig == "No resources found.") {
                 // new branch so generate DC from template
-                println fromgithook.ref
-                println fromgithook.pusher.name
+                println branch
+                println branchFull
                 def user = fromgithook.pusher.name
                 sh """oc process nodejs-mongo-jenkinspipe \
                 -p NAME=$user-$branch \
                 -p SOURCE_REPOSITORY_URL=https://github.com/cfarriscx/tickHW.git \
-                -p SOURCE_REPOSITORY_REF=$branch \
+                -p SOURCE_REPOSITORY_REF=$branchFull \
                 -p DATABASE_NAME=$branch \
                 -p DATABASE_SERVICE_NAME=$branch-mongodb \
                 -l BRANCH=$branch \
@@ -54,7 +53,7 @@ try {
             }
         }
         stage('Clean and Delete') {
-            """oc delete all -l BRANCH=$branch"""
+            """oc delete all -l BRANCH=$lowercaseBranch"""
         }
     }
 } catch (err) {
