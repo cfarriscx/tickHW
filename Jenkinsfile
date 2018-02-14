@@ -14,6 +14,7 @@ try {
             def branch = fromgithook.ref
             def branchFull = branch
             def lowercaseBranch = branch.toLowerCase();
+            def user = fromgithook.pusher.name
             branch = branch.substring(branch.lastIndexOf("/") + 1)
             branch = branch.toLowerCase()
             
@@ -32,7 +33,6 @@ try {
                 """oc delete secret -l BRANCH=$lowercaseBranch"""
             } else if(existingDeploymentConfig == "No resources found.") {
                 // new branch so generate DC from template
-                def user = fromgithook.pusher.name
                 sh """oc process nodejs-mongo-jenkinspipe \
                 -p NAME=$user-$branch \
                 -p SOURCE_REPOSITORY_URL=https://github.com/cfarriscx/tickHW.git \
