@@ -2,9 +2,10 @@
 import hudson.model.*
 
 // define branch before node so it is a global variable available in all stages.
-def branch = ''
+
 
 try {
+    def branch = ''
     node {
         stage('checkout-and-test') {
             
