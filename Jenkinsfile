@@ -7,7 +7,7 @@ try {
         stage('checkout-and-test') {
             
             // Read payload which is a submitted JSON request from github and write to temp file
-            sh 'echo "$payload" >> tempGitFile.json'
+            sh 'echo "$payload" > tempGitFile.json'
             // From the temp file place into variable
             def fromgithook = readJSON file: 'tempGitFile.json'
             // find branch name and set to lower case for environment variables
@@ -18,7 +18,7 @@ try {
 
             sh 'oc project twitter-cicd'
             // Check for new branch and existing openshift buildconfig
-            sh """oc get dc -l $branch >> tempGetDC.txt"""
+            sh """oc get dc -l $branch > tempGetDC.txt"""
             def existingDeploymentConfig = readFile file: 'tempGetDC.txt'
             sh 'cat tempGetDC.txt'
             println existingDeploymentConfig
