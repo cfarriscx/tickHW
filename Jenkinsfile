@@ -8,7 +8,7 @@ try {
     def branch = ''
     node {
         stage('checkout-and-test') {
-            
+            sh 'echo docker -help'
             // Read payload which is a submitted JSON request from github and write to temp file
             sh 'echo "$payload" > tempGitFile.json'
             // From the temp file place into variable
@@ -31,7 +31,7 @@ try {
             def existingDeploymentConfig = readFile('tempGetDC').trim()
             println existingDeploymentConfig
             // Check git message for deleted branch. If deleted then clean resources
-            if(isDeleted) {
+            if(isDeleted == 'true') {
                 // delete all with label
                 """oc delete all -l BRANCH=$branch"""
                 """oc delete pvc -l BRANCH=$branch"""
