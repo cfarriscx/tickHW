@@ -9,7 +9,7 @@ try {
     node {
         node('skopeo-jenkins-slave') {
             stage ('move-image') {
-                skopeo copy docker-registry.default.svc:5000/twitter-cicd/cfarriscx-master docker-registry.default.svc:5000/twitter-cicd/cfarriscx-testbranch
+                sh 'skopeo copy docker-registry.default.svc:5000/twitter-cicd/cfarriscx-master docker-registry.default.svc:5000/twitter-cicd/cfarriscx-testbranch'
             }
         }
         stage('checkout-and-test') {
