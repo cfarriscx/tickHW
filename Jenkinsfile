@@ -7,6 +7,11 @@ import hudson.model.*
 try {
     def branch = ''
     node {
+        node('skopeo-jenkins-slave') {
+            stage ('move-image') {
+                skopeo copy docker-registry.default.svc:5000/twitter-cicd/cfarriscx-master docker-registry.default.svc:5000/twitter-cicd/cfarriscx-testbranch
+            }
+        }
         stage('checkout-and-test') {
             openshiftImageStream apiURL: '', authToken: '', name: 'cfarriscx-master', namespace: 'twitter-cicd', tag: 'latest', verbose: 'true'
             sh 'docker -help'
