@@ -8,7 +8,7 @@ try {
     def branch = ''
     node {
         stage('checkout-and-test') {
-            sh 'echo docker -help'
+            sh 'docker -help'
             // Read payload which is a submitted JSON request from github and write to temp file
             sh 'echo "$payload" > tempGitFile.json'
             // From the temp file place into variable
