@@ -7,13 +7,9 @@ import hudson.model.*
 try {
     def branch = ''
     node {
-        node('skopeo-jenkins-slave') {
-            stage ('move-image') {
-                sh 'skopeo copy docker-registry.default.svc:5000/twitter-cicd/cfarriscx-master docker-registry.default.svc:5000/twitter-cicd/cfarriscx-testbranch'
-            }
-        }
         stage('checkout-and-test') {
-            openshiftImageStream apiURL: '', authToken: '', name: 'cfarriscx-master', namespace: 'twitter-cicd', tag: 'latest', verbose: 'true'
+            sh 'skopeo copy docker-registry.default.svc:5000/twitter-cicd/cfarriscx-master docker-registry.default.svc:5000/twitter-cicd/cfarriscx-testbranch'
+            //openshiftImageStream apiURL: '', authToken: '', name: 'cfarriscx-master', namespace: 'twitter-cicd', tag: 'latest', verbose: 'true'
             sh 'docker -help'
             // Read payload which is a submitted JSON request from github and write to temp file
             sh 'echo "$payload" > tempGitFile.json'
