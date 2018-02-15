@@ -8,9 +8,8 @@ try {
     def branch = ''
     node {
         stage('checkout-and-test') {
-            def imageStream = openshiftImageStream apiURL: '', authToken: '', name: 'cfarriscx-master', namespace: 'twitter-cicd', tag: 'latest', verbose: 'false'
-            println imageStream
-            sh 'sudo docker -help'
+            openshiftImageStream apiURL: '', authToken: '', name: 'cfarriscx-master', namespace: 'twitter-cicd', tag: 'latest', verbose: 'true'
+            sh 'docker -help'
             // Read payload which is a submitted JSON request from github and write to temp file
             sh 'echo "$payload" > tempGitFile.json'
             // From the temp file place into variable
