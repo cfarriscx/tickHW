@@ -6,11 +6,11 @@ import hudson.model.*
 
 try {
     def branch = ''
-    node('nodejs') {
+    node() {
         stage('checkout-and-test') {
-            sh 'skopeo copy docker-registry.default.svc:5000/twitter-cicd/cfarriscx-master docker-registry.default.svc:5000/twitter-cicd/cfarriscx-testbranch'
+            //sh 'skopeo copy docker-registry.default.svc:5000/twitter-cicd/cfarriscx-master docker-registry.default.svc:5000/twitter-cicd/cfarriscx-testbranch'
             //openshiftImageStream apiURL: '', authToken: '', name: 'cfarriscx-master', namespace: 'twitter-cicd', tag: 'latest', verbose: 'true'
-            sh 'docker -help'
+            //sh 'docker -help'
             // Read payload which is a submitted JSON request from github and write to temp file
             sh 'echo "$payload" > tempGitFile.json'
             // From the temp file place into variable
